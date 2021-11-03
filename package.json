@@ -1,6 +1,6 @@
 {
   "name": "angular-sample",
-  "private": true,
+  "private": false,
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
