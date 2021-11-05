@@ -1,4 +1,4 @@
-import { User, UserManager, UserManagerSettings } from 'oidc-client';
+import { Log, User, UserManager, UserManagerSettings } from 'oidc-client-ts';
 import { environment } from 'src/environments/environment';
 
 import { Injectable } from '@angular/core';
