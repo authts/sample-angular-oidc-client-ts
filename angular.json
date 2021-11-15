@@ -21,7 +21,12 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/silent-callback.html"
+              "src/silent-callback.html",
+              {
+                "glob": "oidc-client-ts.js",
+                "input": "./node_modules/oidc-client-ts/dist",
+                "output": "/"
+              }
             ],
             "styles": [
               "src/styles.css"

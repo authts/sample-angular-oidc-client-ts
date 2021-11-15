@@ -1,5 +1,4 @@
-<script src="https://jeffschulzusc.github.io/oidc-client-ts.js" integrity="sha384-jYymn4b6otBtMcTX6/wMlkMwq6gD3XBwCk0R0dCnqMKD8M3clpPT9t9HVYhwX2NZ"
-  crossorigin="anonymous"></script>
+<script src="./oidc-client-ts.js"></script>
 <script>
   var mgr = new oidc.UserManager({ response_mode: 'query' });
   mgr.signinSilentCallback().catch(error => {
