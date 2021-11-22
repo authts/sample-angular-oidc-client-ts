@@ -20,7 +20,7 @@
     "@angular/platform-browser-dynamic": "~12.2.6",
     "@angular/router": "~12.2.6",
     "core-js": "^3.18.0",
-    "oidc-client": "^1.11.5",
+    "oidc-client-ts": "^2.0.0-beta.3",
     "rxjs": "~7.3.0",
     "tslib": "^2.3.1",
     "zone.js": "~0.11.4"

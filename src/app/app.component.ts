@@ -70,4 +70,17 @@ export class AppComponent implements OnInit {
     this.clearMessages();
     this.authService.logout().catch(err => this.addError(err));
   }
+
+  public refresh() : void {
+    console.warn('AppComponent.refresh');
+    this.authService.getUser().then(user => {
+      this.currentUser = user;
+
+      if (user) {
+        this.addMessage('User Logged In');
+      } else {
+        this.addMessage('User Not Logged In');
+      }
+    }).catch(err => this.addError(err));
+  }
 }
