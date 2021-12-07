@@ -5,6 +5,7 @@
     "types": []
   },
   "exclude": [
+    "environments/environment.prod.ts", // angular replacement
     "test.ts",
     "**/*.spec.ts"
   ]
