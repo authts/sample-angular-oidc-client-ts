@@ -1,5 +1,5 @@
 {
-  "$schema": "../../node_modules/@angular/cli/lib/config/schema.json",
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -18,13 +18,14 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
+            "preserveSymlinks": true,
             "assets": [
               "src/favicon.ico",
               "src/assets",
               "src/silent-callback.html",
               {
                 "glob": "oidc-client-ts.js",
-                "input": "./node_modules/oidc-client-ts/dist",
+                "input": "node_modules/oidc-client-ts/dist/browser",
                 "output": "/"
               }
             ],
@@ -59,6 +60,19 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "vendor": true,
+                "hidden": false
+              },
+              "namedChunks": true
             }
           }
         },
@@ -70,8 +84,12 @@
           "configurations": {
             "production": {
               "browserTarget": "App:build:production"
+            },
+            "development": {
+              "browserTarget": "App:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
