@@ -28,6 +28,9 @@
                 "output": "/"
               }
             ],
+            "allowedCommonJsDependencies": [
+              "crypto-js"
+            ],
             "styles": [
               "src/styles.css"
             ],
