@@ -1,14 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-
-import { AuthService, User } from './core/services/auth.service';
-import { TestApiService } from './core/services/test-api.service';
+import { Component, OnInit } from "@angular/core";
+import { User } from 'oidc-client-ts';
+import { AuthService } from "../services/auth.service";
+import { TestApiService } from '../services/test-api.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: "app-home",
+  template: `
+    <div style="text-align:center">
+      <h1>
+        Sample Angular Client
+      </h1>
+    </div>
+    <div>
+      <button (click)='onLogin()'>Login</button>
+      <button (click)='onCallAPI()'>Call API</button>
+      <button (click)='onRenewToken()'>Renew Token</button>
+      <button (click)='onLogout()'>Logout</button>
+    </div>
+    <pre>{{currentUserJson}}</pre>
+    <div>
+      <h2>Messages</h2>
+      <ul>
+        <li *ngFor='let msg of messages'>{{msg}}</li>
+      </ul>
+    </div>
+  `,
+  styles: [],
 })
-export class AppComponent implements OnInit {
+export class HomeComponent implements OnInit {
   constructor(public authService: AuthService, public apiService: TestApiService) {
   }
 
