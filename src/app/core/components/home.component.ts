@@ -1,41 +1,44 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, inject } from '@angular/core';
 import { User } from 'oidc-client-ts';
-import { AuthService } from "../services/auth.service";
+import { AuthService } from '../services/auth.service';
 import { TestApiService } from '../services/test-api.service';
 
 @Component({
-  selector: "app-home",
+  selector: 'app-home',
+  standalone: true,
+  imports: [],
   template: `
     <div style="text-align:center">
-      <h1>
-        Sample Angular Client
-      </h1>
+      <h1>Sample Angular Client</h1>
     </div>
     <div>
-      <button (click)='onLogin()'>Login</button>
-      <button (click)='onCallAPI()'>Call API</button>
-      <button (click)='onRenewToken()'>Renew Token</button>
-      <button (click)='onLogout()'>Logout</button>
+      <button (click)="onLogin()">Login</button>
+      <button (click)="onCallAPI()">Call API</button>
+      <button (click)="onRenewToken()">Renew Token</button>
+      <button (click)="onLogout()">Logout</button>
     </div>
-    <pre>{{currentUserJson}}</pre>
+    <pre>{{ currentUserJson }}</pre>
     <div>
       <h2>Messages</h2>
       <ul>
-        <li *ngFor='let msg of messages'>{{msg}}</li>
+        @for (msg of messages; track msg) {
+          <li>{{ msg }}</li>
+        }
       </ul>
     </div>
   `,
-  styles: [],
+  styles: '',
 })
 export class HomeComponent implements OnInit {
-  constructor(public authService: AuthService, public apiService: TestApiService) {
-  }
+  readonly authService = inject(AuthService);
+  readonly apiService = inject(TestApiService);
 
   messages: string[] = [];
+
+  currentUser: User | null = null;
   get currentUserJson(): string {
     return JSON.stringify(this.currentUser, null, 2);
   }
-  currentUser: User;
 
   ngOnInit(): void {
     this.authService.getUser().then(user => {
@@ -49,33 +52,33 @@ export class HomeComponent implements OnInit {
     }).catch(err => this.addError(err));
   }
 
-  clearMessages() {
+  private clearMessages() {
     while (this.messages.length) {
       this.messages.pop();
     }
   }
-  addMessage(msg: string) {
+  private addMessage(msg: string) {
     this.messages.push(msg);
   }
-  addError(msg: string | any) {
-    this.messages.push('Error: ' + msg && msg.message);
+  private addError(msg: string | Error) {
+    this.messages.push('Error: ' + (msg instanceof Error ? msg.message : msg));
   }
 
-  public onLogin() {
+  onLogin() {
     this.clearMessages();
     this.authService.login().catch(err => {
       this.addError(err);
     });
   }
 
-  public onCallAPI() {
+  onCallAPI() {
     this.clearMessages();
     this.apiService.callApi().then(result => {
       this.addMessage('API Result: ' + JSON.stringify(result));
     }, err => this.addError(err));
   }
 
-  public onRenewToken() {
+  onRenewToken() {
     this.clearMessages();
     this.authService.renewToken()
       .then(user => {
@@ -85,12 +88,12 @@ export class HomeComponent implements OnInit {
       .catch(err => this.addError(err));
   }
 
-  public onLogout() {
+  onLogout() {
     this.clearMessages();
     this.authService.logout().catch(err => this.addError(err));
   }
 
-  public refresh() : void {
+  refresh(): void {
     console.warn('AppComponent.refresh');
     this.authService.getUser().then(user => {
       this.currentUser = user;

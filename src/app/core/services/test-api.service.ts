@@ -1,26 +1,29 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { User } from 'oidc-client-ts';
-import { environment } from 'src/environments/environment';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 
-
+export type TestApiResponse = { type: string; value: string }[];
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TestApiService {
+  private readonly httpClient = inject(HttpClient);
+  private readonly authService = inject(AuthService);
 
-  constructor(private httpClient: HttpClient, private authService: AuthService) {
-  }
-
-  public callApi(): Promise<any> {
-    return this.authService.getUser().then((user: User) => {
-      if (user && user.access_token) {
-        return this._callApi(user.access_token);
+  callApi(): Promise<TestApiResponse> {
+    return this.authService.getUser().then((user) => {
+      if (user?.access_token) {
+        return this.makeApiRequest(user.access_token);
       } else if (user) {
-        return this.authService.renewToken().then((user: User) => {
-          return this._callApi(user.access_token);
+        return this.authService.renewToken().then((user) => {
+          return this.makeApiRequest(user!.access_token);
         });
       } else {
         throw new Error('user is not logged in');
@@ -28,21 +31,23 @@ export class TestApiService {
     });
   }
 
-  _callApi(token: string) {
+  private makeApiRequest(token: string): Promise<TestApiResponse> {
     const headers = new HttpHeaders({
       Accept: 'application/json',
       Authorization: 'Bearer ' + token
     });
 
-    return this.httpClient.get(environment.apiRoot + 'test', { headers })
-      .toPromise()
-      .catch((result: HttpErrorResponse) => {
-        if (result.status === 401) {
-          return this.authService.renewToken().then(user => {
-            return this._callApi(user.access_token);
-          });
-        }
-        throw result;
-      });
+    return firstValueFrom(
+      this.httpClient.get<TestApiResponse>(`${environment.apiRoot}/test`, {
+        headers,
+      })
+    ).catch((result: HttpErrorResponse) => {
+      if (result.status === 401) {
+        return this.authService.renewToken().then(() => {
+          return this.callApi();
+        });
+      }
+      throw result;
+    });
   }
 }
