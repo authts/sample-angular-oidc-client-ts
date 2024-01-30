@@ -4,11 +4,11 @@
 
 export const environment = {
   production: false,
-  stsAuthority: 'https://demo.identityserver.io/',
+  stsAuthority: 'https://demo.duendesoftware.com/',
   clientId: 'interactive.public',
   clientRoot: 'http://localhost:4200/',
   clientScope: 'openid profile email api',
-  apiRoot: 'https://demo.identityserver.io/api/',
+  apiRoot: 'https://demo.duendesoftware.com/api',
 };
 
 /*

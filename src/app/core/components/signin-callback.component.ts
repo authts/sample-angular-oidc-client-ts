@@ -1,17 +1,21 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from "../services/auth.service";
+import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: "app-signin-callback",
+  selector: 'app-signin-callback',
   template: `<p>Processing signin callback</p>`,
-  styles: [],
+  styles: '',
+  standalone: true,
+  imports: [],
 })
 export class SigninCallbackComponent implements OnInit {
-  constructor(private readonly _router: Router, private readonly _authService: AuthService) {}
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
-  async ngOnInit() {
-    await this._authService.userManager.signinCallback();
-    this._router.navigate(['']);
+  ngOnInit() {
+    this.authService.userManager.signinCallback().finally(() => {
+      this.router.navigate(['']);
+    });
   }
 }
